@@ -4,10 +4,10 @@
  * @author Kim Schwartz <kimba.schwartzy@gmail.com>
  */
 
-var WINNINGINDEX = 4;
+//var WINNINGINDEX = 4;
 
 describe('Tests to make sure Scale is functioning as expected', () => {
-  it('E2E', () => {
+  it('Tests that user can find the correct answer and produce the correct alert', () => {
     cy.visit('http://sdetchallenge.fetch.com/');
     cy.wait(300);
     cy.get('[id="left_0"]').type('0');
@@ -18,10 +18,12 @@ describe('Tests to make sure Scale is functioning as expected', () => {
       .invoke('text')
       .then((text1) => {
         if (text1.includes('>')) {
-          WINNINGINDEX = 8;
+          // var WINNINGINDEX = 8;
+          cy.get('[id="coin_8"]').click();
           //return '8';
         } else if (text1.includes('<')) {
-          WINNINGINDEX = 0;
+          //WINNINGINDEX = 0;
+          cy.get('[id="coin_0"]').click();
           //return '0';
           // console.log('BONER'); - CONSOLE LOG MAKES IT RETURN WHY DOESN'T RETURN FIGURE THAT OUT
           //AND THEN FLIP LOGICS SO NUMBERS IN SAME ORDERS
@@ -34,10 +36,13 @@ describe('Tests to make sure Scale is functioning as expected', () => {
             .invoke('text')
             .then((text2) => {
               if (text2.includes('>')) {
-                WINNINGINDEX = 7;
+                //var WINNINGINDEX = 7;
+                cy.get('[id="coin_7"]').click();
                 //return '7';
               } else if (text2.includes('<')) {
-                WINNINGINDEX = 1;
+                // WINNINGINDEX = 1;
+                // cy.get('.coins').contains(WINNINGINDEX).click();
+                cy.get('[id="coin_7"]').click();
                 // return '1';
               } else {
                 cy.get('[id="left_2"]').type('2');
@@ -48,10 +53,12 @@ describe('Tests to make sure Scale is functioning as expected', () => {
                   .invoke('text')
                   .then((text3) => {
                     if (text3.includes('>')) {
-                      WINNINGINDEX = 6;
+                      // var WINNINGINDEX = 6;
+                      cy.get('[id="coin_6"]').click();
                       // return '6';
                     } else if (text3.includes('<')) {
-                      WINNINGINDEX = 2;
+                      // WINNINGINDEX = 2;
+                      cy.get('[id="coin_2"]').click();
                       //return '2';
                     } else {
                       cy.get('[id="left_3"]').type('3');
@@ -62,13 +69,16 @@ describe('Tests to make sure Scale is functioning as expected', () => {
                         .invoke('text')
                         .then((text4) => {
                           if (text4.includes('>')) {
-                            WINNINGINDEX = 5;
+                            //var WINNINGINDEX = 5;
+                            cy.get('[id="coin_5"]').click();
                             //return '5';
                           } else if (text4.includes('<')) {
-                            WINNINGINDEX = 3;
+                            // WINNINGINDEX = 3;
+                            cy.get('[id="coin_3"]').click();
                             //return '3';
                           } else {
-                            WINNINGINDEX = 4;
+                            // WINNINGINDEX = 4;
+                            cy.get('[id="coin_4"]').click();
                             //return '4';
                           }
                         });
@@ -78,11 +88,13 @@ describe('Tests to make sure Scale is functioning as expected', () => {
             });
         }
       });
-    console.log(WINNINGINDEX);
+    //const stub = cy.stub();
+    cy.on('window:alert', (str) => {
+      expect(str).to.equal('Yay! You find it!');
+    });
+    //console.log(WINNINGINDEX);
     //OKAY. SO NOW THE PROBLEM IS THAT WINNINGINDEX ISN'T GETTING REASSIGNED
-    cy.get('.coins').contains(WINNINGINDEX).click();
-    //cy.get('.button').contains(WINNINGINDEX).click();
-    // });
+    // cy.get('.coins').contains(WINNINGINDEX).click();
     //verify success alert is displayed
     // cy.get(ALERTWITHSUCCESSMESSAGE) 'Yay! You find it!' .should('HOWEVER WE VERIFY ALERTS POP IN CYPRESS')
   });
