@@ -16,3 +16,7 @@ For http://sdetchallenge.fetch.com/
 7. Click Start E2E Testing Button
 8. Select Test to run (click it)
 9. Tests will run in open cypress runner and you can view them in real time as well as click into the individual tests to view snapshots of individual steps
+
+## Where does the actual test code live?
+
+- - fetchChallenge/cypress/e2e/
