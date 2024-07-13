@@ -4,82 +4,70 @@
  * @author Kim Schwartz <kimba.schwartzy@gmail.com>
  */
 
-//var WINNINGINDEX = 4;
-
 describe('Tests to make sure Scale is functioning as expected', () => {
   it('Tests that user can find the correct answer and produce the correct alert', () => {
+    // visit site
     cy.visit('http://sdetchallenge.fetch.com/');
-    cy.wait(300);
-    cy.get('[id="left_0"]').type('0');
-    cy.get('[id="right_0"]').type('8');
+    // input 0 and 8 in the bowls
+    cy.leftBowl('0');
+    cy.rightBowl('8');
+    // click weigh
     cy.get('[id="weigh"]').click();
+    // average wait for results to be produced, ideally would do this off of a network call instead but there are no discernible network calls
     cy.wait(3000);
-    cy.get('.game-info')
+    // check result for < or > and click correct coin in accordance
+    cy.get('.result')
       .invoke('text')
       .then((text1) => {
         if (text1.includes('>')) {
-          // var WINNINGINDEX = 8;
           cy.get('[id="coin_8"]').click();
-          //return '8';
         } else if (text1.includes('<')) {
-          //WINNINGINDEX = 0;
           cy.get('[id="coin_0"]').click();
-          //return '0';
-          // console.log('BONER'); - CONSOLE LOG MAKES IT RETURN WHY DOESN'T RETURN FIGURE THAT OUT
-          //AND THEN FLIP LOGICS SO NUMBERS IN SAME ORDERS
         } else {
-          cy.get('[id="left_1"]').type('1');
-          cy.get('[id="right_1"]').type('7');
+          // if bars are equal, hit reset and input 1 and 7 in bowls and try again
+          cy.get('[id="reset"]').contains('Reset').click();
+          cy.leftBowl('1');
+          cy.rightBowl('7');
           cy.get('[id="weigh"]').click();
           cy.wait(3000);
-          cy.get('.game-info')
+          cy.get('.result')
             .invoke('text')
             .then((text2) => {
-              if (text2.includes('>')) {
-                //var WINNINGINDEX = 7;
+              if (text2.includes('<')) {
+                cy.get('[id="coin_1"]').click();
+              } else if (text2.includes('>')) {
                 cy.get('[id="coin_7"]').click();
-                //return '7';
-              } else if (text2.includes('<')) {
-                // WINNINGINDEX = 1;
-                // cy.get('.coins').contains(WINNINGINDEX).click();
-                cy.get('[id="coin_7"]').click();
-                // return '1';
               } else {
-                cy.get('[id="left_2"]').type('2');
-                cy.get('[id="right_2"]').type('6');
+                // if bars are equal, hit reset and input 2 and 6 in bowls and try again
+                cy.get('[id="reset"]').contains('Reset').click();
+                cy.leftBowl('2');
+                cy.rightBowl('6');
                 cy.get('[id="weigh"]').click();
                 cy.wait(3000);
-                cy.get('.game-info')
+                cy.get('.result')
                   .invoke('text')
                   .then((text3) => {
-                    if (text3.includes('>')) {
-                      // var WINNINGINDEX = 6;
-                      cy.get('[id="coin_6"]').click();
-                      // return '6';
-                    } else if (text3.includes('<')) {
-                      // WINNINGINDEX = 2;
+                    if (text3.includes('<')) {
                       cy.get('[id="coin_2"]').click();
-                      //return '2';
+                    } else if (text3.includes('>')) {
+                      cy.get('[id="coin_6"]').click();
                     } else {
-                      cy.get('[id="left_3"]').type('3');
-                      cy.get('[id="right_3"]').type('5');
+                      // if bars are equal, hit reset and input 3 and 5 in bowls and try again
+                      cy.get('[id="reset"]').contains('Reset').click();
+                      cy.leftBowl('3');
+                      cy.rightBowl('5');
                       cy.get('[id="weigh"]').click();
                       cy.wait(3000);
-                      cy.get('.game-info')
+                      cy.get('.result')
                         .invoke('text')
                         .then((text4) => {
-                          if (text4.includes('>')) {
-                            //var WINNINGINDEX = 5;
-                            cy.get('[id="coin_5"]').click();
-                            //return '5';
-                          } else if (text4.includes('<')) {
-                            // WINNINGINDEX = 3;
+                          if (text4.includes('<')) {
                             cy.get('[id="coin_3"]').click();
-                            //return '3';
+                          } else if (text4.includes('>')) {
+                            cy.get('[id="coin_5"]').click();
                           } else {
-                            // WINNINGINDEX = 4;
+                            // if none of the previous weighings produced the fake bar, the fake one is 4
                             cy.get('[id="coin_4"]').click();
-                            //return '4';
                           }
                         });
                     }
@@ -88,19 +76,37 @@ describe('Tests to make sure Scale is functioning as expected', () => {
             });
         }
       });
-    //const stub = cy.stub();
+    // verify alert produces expected success message
     cy.on('window:alert', (str) => {
       expect(str).to.equal('Yay! You find it!');
     });
-    //console.log(WINNINGINDEX);
-    //OKAY. SO NOW THE PROBLEM IS THAT WINNINGINDEX ISN'T GETTING REASSIGNED
-    // cy.get('.coins').contains(WINNINGINDEX).click();
-    //verify success alert is displayed
-    // cy.get(ALERTWITHSUCCESSMESSAGE) 'Yay! You find it!' .should('HOWEVER WE VERIFY ALERTS POP IN CYPRESS')
+  });
+
+  it('Tests that an incorrect answer leads to appropriate alert', () => {
+    // visit site
+    cy.visit('http://sdetchallenge.fetch.com/');
+    // enter 0 for weighing
+    cy.leftBowl('0');
+    // enter 8 for weighing
+    cy.rightBowl('8');
+    // click weigh
+    cy.get('[id="weigh"]').click();
+    // average wait for results to be produced, ideally would do this off of a network call instead but there are no discernible network calls
+    cy.wait(3000);
+    cy.get('.result')
+      .invoke('text')
+      .then((text) => {
+        // < or = appear that would mean either 0 is the fake bar or they are equal, either way you can click coin 8 to produce the try again alert
+        if (text.includes('<' || '=')) {
+          cy.get('[id="coin_8"]').click();
+        } else {
+          // otherwise > appears so that would mean that 0 is an incorrect answer and you can click that to produce the Oops alert
+          cy.get('[id="coin_0"]').click();
+        }
+      });
+    // verify alert shows expected Try Again message
+    cy.on('window:alert', (str) => {
+      expect(str).to.equal('Oops! Try Again!');
+    });
   });
 });
-
-// });
-
-//maybe two separate funcitons/things like weighings independent from just looping through
-//guesses until we get the correct alert?
