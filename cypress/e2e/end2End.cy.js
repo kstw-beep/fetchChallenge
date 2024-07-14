@@ -8,7 +8,7 @@ describe('Tests to make sure Scale is functioning as expected', () => {
   it('Tests that user can find the fake bar and produce the correct alert and outputs', () => {
     // visit site
     cy.visit('http://sdetchallenge.fetch.com/');
-    // input 0 and 8 in the bowls
+    // input 0 and 8 in the bowls and click weigh
     cy.weighBars('0', '8');
     // check result for < or > and click correct bar in accordance
     cy.get('.result')
