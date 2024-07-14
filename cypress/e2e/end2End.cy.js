@@ -5,7 +5,7 @@
  */
 
 describe('Tests to make sure Scale is functioning as expected', () => {
-  it('Tests that user can find the correct answer and produce the correct alert', () => {
+  it('Tests that user can find the fake bar and produce the correct alert and outputs', () => {
     // visit site
     cy.visit('http://sdetchallenge.fetch.com/');
     // input 0 and 8 in the bowls
