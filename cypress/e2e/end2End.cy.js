@@ -19,10 +19,14 @@ describe('Tests to make sure Scale is functioning as expected', () => {
     cy.get('.result')
       .invoke('text')
       .then((text1) => {
-        if (text1.includes('>')) {
-          cy.get('[id="coin_8"]').click();
-        } else if (text1.includes('<')) {
+        if (text1.includes('<')) {
           cy.get('[id="coin_0"]').click();
+          // output number of weighing
+          cy.log('Bar 0 is fake!');
+        } else if (text1.includes('>')) {
+          cy.get('[id="coin_8"]').click();
+          // output number of weighing
+          cy.log('Bar 8 is fake!');
         } else {
           // if bars are equal, hit reset and input 1 and 7 in bowls and try again
           cy.get('[id="reset"]').contains('Reset').click();
@@ -35,8 +39,12 @@ describe('Tests to make sure Scale is functioning as expected', () => {
             .then((text2) => {
               if (text2.includes('<')) {
                 cy.get('[id="coin_1"]').click();
+                // output number of weighing
+                cy.log('Bar 1 is fake!');
               } else if (text2.includes('>')) {
                 cy.get('[id="coin_7"]').click();
+                // output number of weighing
+                cy.log('Bar 7 is fake!');
               } else {
                 // if bars are equal, hit reset and input 2 and 6 in bowls and try again
                 cy.get('[id="reset"]').contains('Reset').click();
@@ -49,8 +57,12 @@ describe('Tests to make sure Scale is functioning as expected', () => {
                   .then((text3) => {
                     if (text3.includes('<')) {
                       cy.get('[id="coin_2"]').click();
+                      // output number of weighing
+                      cy.log('Bar 2 is fake!');
                     } else if (text3.includes('>')) {
                       cy.get('[id="coin_6"]').click();
+                      // output number of weighing
+                      cy.log('Bar 6 is fake!');
                     } else {
                       // if bars are equal, hit reset and input 3 and 5 in bowls and try again
                       cy.get('[id="reset"]').contains('Reset').click();
@@ -63,11 +75,17 @@ describe('Tests to make sure Scale is functioning as expected', () => {
                         .then((text4) => {
                           if (text4.includes('<')) {
                             cy.get('[id="coin_3"]').click();
+                            // output number of weighing
+                            cy.log('Bar 3 is fake!');
                           } else if (text4.includes('>')) {
                             cy.get('[id="coin_5"]').click();
+                            // output number of weighing
+                            cy.log('Bar 5 is fake!');
                           } else {
                             // if none of the previous weighings produced the fake bar, the fake one is 4
                             cy.get('[id="coin_4"]').click();
+                            // output number of weighing
+                            cy.log('Bar 4 is fake!');
                           }
                         });
                     }
@@ -79,6 +97,14 @@ describe('Tests to make sure Scale is functioning as expected', () => {
     // verify alert produces expected success message
     cy.on('window:alert', (str) => {
       expect(str).to.equal('Yay! You find it!');
+      //Output alert message, number of weighing and list of weighing made
+      //cy.log();
+      // output list of weighings made
+      cy.get('.game-info')
+        .invoke('text')
+        .then((weighings) => {
+          cy.log('List of Weighings', weighings);
+        });
     });
   });
 
