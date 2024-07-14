@@ -20,3 +20,5 @@ For http://sdetchallenge.fetch.com/
 ## Where does the actual test code live?
 
 - - fetchChallenge/cypress/e2e/
+### custom commands
+- - - fetchChallenge/cypress/support/commands.js
